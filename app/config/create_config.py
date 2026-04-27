@@ -34,18 +34,15 @@ def create_config_file():
     config_data['directories'] = {}
 
     # Interactive setup to get directory names
-    config_data['directories']['mascot'] = get_full_path(str(input("Enter the name of the 'mascot' directory: ").strip()))
-    config_data['directories']['memes'] = get_full_path(str(input("Enter the name of the 'memes' directory: ").strip()))
+    config_data['directories']['mascot'] = get_full_path(str(input("Enter the name of the 'mascot' directory (Default is None): ").strip()))
+    config_data['directories']['memes'] = get_full_path(str(input("Enter the name of the 'memes' directory (Default is None): ").strip()))
 
-    # Verify existance of folders
-    if not check_if_exist(config_data['directories']['mascot'], config_data['directories']['memes']):
-        print("\nSomething seems wrong with these paths : ")
-        print(f"\n  \"{config_data['directories']['mascot']}\"")
-        print(f"\n  \"{config_data['directories']['memes']}\"")
-        print("\nIf one of the path is wrong, restart. Else continue.")
-        if str(input("\nContinue ? [y/N]")).lower() in ["", "n", "no", "non"]:
-            print("\nAborted.")
-            sys.exit(1)
+    # Init None if default
+    if config_data['directories']['mascot'] == "":
+        config_data['directories']['mascot'] = None
+
+    if config_data['directories']['memes'] == "":
+        config_data['directories']['memes'] = None   
 
     # --- Step 2: Configure Ollama Model Interactively (Modified) ---
     print("\n--- Configuring the Ollama model ---")
@@ -66,6 +63,7 @@ def create_config_file():
         'headers': headers
     }
 
+    available_models = []
     # This part relies on the 'ollama' library being accessible.
     try:
     # Attempt to list Ollama models
@@ -75,32 +73,32 @@ def create_config_file():
 
         if 'models' in response:
             available_models = [model.model for model in response['models']]
-        else:
-            available_models = []
     except Exception as e:
         print(f"Could not access Ollama list. Ollama must be installed and running.\nError: {e}")
-        sys.exit(1)
+        if not str(input("\nContinue without Ollama ? (Ollama is not required for the derush part): (Y/n)")).lower() in ["", "y", "o", "yes", "oui"]:
+            sys.exit(0)
 
-    # Interactive model selection
-    selected_model = ""
-    if available_models:
-        print("\nAvailable Ollama models:")
-        for i, model in enumerate(available_models):
-            print(f"{i+1}. {model}")
+    if len(available_models) > 0 :
+        # Interactive model selection
+        selected_model = ""
+        if available_models:
+            print("\nAvailable Ollama models:")
+            for i, model in enumerate(available_models):
+                print(f"{i+1}. {model}")
 
-        while True:
-            try:
-                choice = input("Please choose a model (enter the number): ").strip()
-                if choice.isdigit() and 1 <= int(choice) <= len(available_models):
-                    selected_model = available_models[int(choice) - 1]
-                    break
-                else:
-                    print("Invalid choice. Please enter a number corresponding to the list of models.")
-            except ValueError:
-                print("Invalid input. Please enter a number.")
+            while True:
+                try:
+                    choice = input("Please choose a model (enter the number): ").strip()
+                    if choice.isdigit() and 1 <= int(choice) <= len(available_models):
+                        selected_model = available_models[int(choice) - 1]
+                        break
+                    else:
+                        print("Invalid choice. Please enter a number corresponding to the list of models.")
+                except ValueError:
+                    print("Invalid input. Please enter a number.")
 
 
-    config_data['ollama']['model'] = selected_model
+        config_data['ollama']['model'] = selected_model
 
     # --- Step 3: Write the YAML file to the specified location ---
     print(f"\n--- Writing configuration to {config_file_path} ---")
@@ -120,7 +118,7 @@ def create_config_file():
                     f.write(f"    Authorization: \"{config_data['ollama']['headers']["Authorization"]}\"\n")
                 f.write(f"project:\n")
                 f.write(f"  fps: 60\n")
-                f.write(f"  format: otio # the project file format, check which one is compatible with your editor.\nAll the preinstalled formats adapters are ['maya_sequencer', 'burnins', 'cmx_3600', 'svg', 'AAF', 'ale', 'xges', 'fcp_xml', 'otio_json', 'otioz', 'otiod'].\nYou can install new adapters with pip (you don't need to edit the code of predit)")
+                f.write(f"  format: otio # the project file format, check which one is compatible with your editor.\n # All the preinstalled formats adapters are ['maya_sequencer', 'burnins', 'cmx_3600', 'svg', 'AAF', 'ale', 'xges', 'fcp_xml', 'otio_json', 'otioz', 'otiod'].\n # You can install new adapters with pip (you don't need to edit the code of predit)")
             
         print(f"\nConfiguration created successfully in {config_file_path}!")
         print("Content of the created file:")

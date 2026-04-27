@@ -58,6 +58,27 @@ The output is an `.otio` file (and/or other formats) that you can import directl
 
 ---
 
+## Config File Exemple
+
+Located in `~/.config/predit/config.yaml` after predit first use.
+
+```yaml
+directories:
+  mascot: 
+  memes: "/home/user/Workspace/memes"
+ollama:
+  url: "http://127.0.0.1:11434"
+  model: "gemma4:e2b"
+  headers:
+project:
+  fps: 60
+  format: otio # the project file format, check which one is compatible with your editor.
+ # All the preinstalled formats adapters are ['maya_sequencer', 'burnins', 'cmx_3600', 'svg', 'AAF', 'ale', 'xges', 'fcp_xml', 'otio_json', 'otioz', 'otiod'].
+ # You can install new adapters with pip (you don't need to edit the code of predit)
+```
+
+---
+
 ## Roadmap
 
 - [x] Derush via speech recognition (silence & filler removal)
