@@ -48,13 +48,13 @@ predit path/to/file_or_directory -o path/to/output_directory
 
 The output is an `.otio` file (and/or other formats) that you can import directly into your editor of choice.
 
-### Import in Kdenlive
-
-**File → OpenTimelineIO Import** *(requires Kdenlive ≥ 25.04)*
-
 ### Import in DaVinci Resolve
 
 **File → Import Timeline → Import AAF, EDL, XML...** → select the `.otio` file
+
+### Import in Kdenlive
+
+**File → OpenTimelineIO Import** *(requires Kdenlive ≥ 25.04)*
 
 ---
 
@@ -62,8 +62,8 @@ The output is an `.otio` file (and/or other formats) that you can import directl
 
 - [x] Derush via speech recognition (silence & filler removal)
 - [ ] Ollama integration — local LLM decision making
-- [ ] Meme insertion
 - [ ] Emotion-aware character choosing
+- [ ] Meme insertion
 - [ ] More output formats
 
 ---
