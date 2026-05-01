@@ -1,5 +1,8 @@
 import opentimelineio as otio
 from app.config.config_reader import FPS, FORMAT, ID
+from app.utils.timestamps_util import ts_to_rational, ts_range
+
+from pathlib import Path
 
 timeline = False
 def get_timeline():
@@ -9,17 +12,6 @@ def get_timeline():
     timeline = otio.schema.Timeline(name=f"Project-{ID}")
     return timeline
 
-def ts_to_rational(timestamp: float) -> otio.opentime.RationalTime:
-    return otio.opentime.RationalTime((timestamp) * FPS, FPS)
-
-def ts_range(start: float, end: float) -> otio.opentime.TimeRange:
-    """Crée un TimeRange depuis deux timestamps."""
-    t_start = ts_to_rational(start)
-    t_end   = ts_to_rational(end)
-    return otio.opentime.TimeRange(
-        start_time=t_start,
-        duration=t_end - t_start
-    )
 
 def create_Track(name: str, kind):
     return otio.schema.Track(
@@ -28,16 +20,18 @@ def create_Track(name: str, kind):
     )
 
 def create_media_ref(filepath: str, total_duration: str) -> otio.schema.ExternalReference:
-    full_duration = ts_to_rational(total_duration)
-    
-    # Référence vers le fichier source
     return otio.schema.ExternalReference(
         target_url=f"file://{filepath}",
         available_range=otio.opentime.TimeRange(
-            start_time=otio.opentime.RationalTime(0, FPS),
-            duration=full_duration
+            start_time=ts_to_rational(0),
+            duration=ts_to_rational(total_duration)
         )
     )
+
+def create_gap(seconds):
+    return otio.schema.Gap(
+        duration=ts_to_rational(seconds)
+)
 
 def create_clip(
     media_ref: otio.schema.ExternalReference,
@@ -51,13 +45,27 @@ def create_clip(
     - available_range : toute la durée du fichier source
     - source_range    : la portion qu'on veut utiliser (le "cut")
     """
-    # La portion qu'on découpe
-    cut_range = ts_range(source_start, source_end)
-
     return otio.schema.Clip(
         name=clip_name,
         media_reference=media_ref,
-        source_range=cut_range
+        source_range=ts_range(source_start, source_end)
+    )
+
+def create_image_clip(
+    clip_name: str,
+    media_ref,
+    display_duration_seconds: float) -> otio.schema.Clip:
+    """
+    Crée un Clip d'image fixe.
+    L'image n'a pas de durée naturelle, on lui en donne une.
+    """
+    return otio.schema.Clip(
+        name=clip_name,
+        media_reference=media_ref,
+        source_range=otio.opentime.TimeRange(
+            start_time=ts_to_rational(0),
+            duration=ts_to_rational(display_duration_seconds)
+        )
     )
 
 def write_file(folder):

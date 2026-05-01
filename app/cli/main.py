@@ -12,6 +12,9 @@ from app.core.derush import DeRusher
 from app.core.merger import Merger, Path, VideoFileClip
 from app.core.project_writter import write_file
 from app.core.ffmpeg import normalize_video_s_audio
+from app.core.speechToText import transcribe_audio
+
+from app.gateway.llm_gateway import mascot_sequence
 
 
 TEMP_AUDIO_PATH = f"{TMP}/audio.wav"
@@ -86,7 +89,7 @@ def main():
 
     print("The files will be derushed in order:\n  {}".format(',\n  '.join(media_list)))
     print('A project file "Project-{}.{}" will be created in:\n  {}\n'.format(ID, FORMAT, output_directory))
-    if str(input('Proceed to derush? (Y/n)')).lower() in ACCEPT_LIST:
+    if str(input('Proceed to pre-edit? (Y/n)')).lower() in ACCEPT_LIST:
         
         mkdir("{}/Predit_Enhanced_({})".format(parent_directory, ID))
 
@@ -119,7 +122,11 @@ def main():
         merger: Merger = Merger(all_clips)
         derusher.extract_audio(merger.full_clip)
         merger.makeSubClips(derusher.getTimeStamps())
-        merger.write_concatenated_audio_clips()
+        success = merger.write_concatenated_audio_clips()
+        
+        if success :
+            speech = transcribe_audio(f"{TMP}/merged.wav")
+            mascot_sequence(speech=speech)
 
         write_file(output_directory)
 

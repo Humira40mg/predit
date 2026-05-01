@@ -16,7 +16,7 @@ else:
 
 try:
     with open(CONFIG_PATH, 'r') as file:
-        config_data = yaml.safe_load(file)
+        config_data: dict = yaml.safe_load(file)
         print("Successfully loaded the configuration file.")
         
 except yaml.YAMLError as e:
@@ -40,3 +40,10 @@ FORMAT = config_data.get("project").get("format")
 ROOT_DIR = Path(__file__).parent.parent.parent
 TMP = f"{ROOT_DIR}/tmp"
 ID = floor(datetime.now().timestamp())
+
+if "STT" in config_data.keys():
+    STT_MODEL = config_data.get("STT").get("model") or "medium"
+    STT_LANGUAGE = config_data.get("STT").get("language")
+else:
+    STT_MODEL = "medium"
+    STT_LANGUAGE = None
