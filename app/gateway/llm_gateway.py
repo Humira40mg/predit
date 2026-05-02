@@ -1,7 +1,7 @@
 import app.rest_client.ollama as llm
 from app.config.config_reader import MASCOT_FOLDER, LLM_MODEL
 from app.utils.path_util import check_if_exist
-from app.core.project_writter import get_timeline, create_Track, create_gap, create_media_ref, create_image_clip
+from app.core.project_writter import get_timeline, create_Track, create_gap, create_media_ref, create_image_clip, create_image_ref
 
 from opentimelineio.schema import TrackKind
 from os import listdir
@@ -69,13 +69,14 @@ You MUST always respond in valid JSON only, with no text before or after, using 
                 break
 
         gap_time = start - last_timestamp
+        last_timestamp = end
         if gap_time > 0 :
             track.append(create_gap(gap_time))
         
         duration = end-start
         
         track.append(create_image_clip(f"image-{i}", 
-            create_media_ref(f"{MASCOT_FOLDER}/{character}", duration),
+            create_image_ref(f"{MASCOT_FOLDER}/{character}", duration),
             duration))
 
     print("\nSaving the character track to timeline...")

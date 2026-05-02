@@ -21,10 +21,19 @@ def create_Track(name: str, kind):
 
 def create_media_ref(filepath: str, total_duration: str) -> otio.schema.ExternalReference:
     return otio.schema.ExternalReference(
-        target_url=f"file://{filepath}",
+        target_url=filepath,
         available_range=otio.opentime.TimeRange(
             start_time=ts_to_rational(0),
             duration=ts_to_rational(total_duration)
+        )
+    )
+
+def create_image_ref(filepath: str, total_duration: str) -> otio.schema.ExternalReference:
+    return otio.schema.ExternalReference(
+        target_url=filepath,
+        available_range=otio.opentime.TimeRange(
+            start_time=otio.opentime.RationalTime(0,0),
+            duration=otio.opentime.RationalTime(total_duration*FPS, 0)
         )
     )
 
