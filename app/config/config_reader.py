@@ -7,7 +7,8 @@ from pathlib import Path
 
 from .create_config import create_config_file
 
-CONFIG_PATH = os.path.expanduser("~/.config/predit/config.yml")
+CONF_FOLDER = os.path.expanduser("~/.config/predit")
+CONFIG_PATH = (f"{CONF_FOLDER}/config.yml")
 
 if os.path.exists(CONFIG_PATH):
     print(f"Config file found.\n")
@@ -29,9 +30,10 @@ except Exception as e:
 MASCOT_FOLDER = config_data.get("directories").get("mascot")
 MEME_FOLDER = config_data.get("directories").get("memes")
 
-OLLAMA_URL = config_data.get("ollama").get("url")
-LLM_MODEL = config_data.get("ollama").get("model")
-OLLAMA_HEADERS = config_data.get("ollama").get("headers")
+OLLAMA_URL = config_data["ollama"].get("url")
+LLM_MODEL = config_data["ollama"].get("model")
+OLLAMA_HEADERS = config_data["ollama"].get("headers")
+SEGMENTED_MODE = config_data["ollama"].get("segmented_mode")
 
 FPS = config_data.get("project").get("fps")
 FORMAT = config_data.get("project").get("format")
@@ -40,6 +42,9 @@ FORMAT = config_data.get("project").get("format")
 ROOT_DIR = Path(__file__).parent.parent.parent
 TMP = f"{ROOT_DIR}/tmp"
 ID = floor(datetime.now().timestamp())
+ACCEPT_LIST = ['', 'y', 'yes', 'o', 'oui']
+COMPATIBLE = ['mp4', 'mkv', 'mp3', 'wav']
+TEMP_AUDIO_PATH = f"{TMP}/audio.wav"
 
 if "STT" in config_data.keys():
     STT_MODEL = config_data.get("STT").get("model") or "medium"

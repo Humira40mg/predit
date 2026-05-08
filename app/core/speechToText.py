@@ -16,4 +16,4 @@ def transcribe_audio(filepath: str):
     if not STT_LANGUAGE:
         print(f"Langage detected : {info.language}")
         
-    return segments
+    return list(segments)

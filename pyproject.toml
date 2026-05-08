@@ -3,7 +3,7 @@ name = "predit"
 version = "0.1.0"
 description = "Pre-edit a video using an avatar and memes saving into a xml file usable in kdenlive and some other edit-software."
 authors = [
-    {name = "Nathan Millot", email = "nathanmillot@icloud.com"}
+    {name = "JoKSo", email = "sir_jokso@outlook.com"}
 ]
 dependencies = [
     "silero-vad==6.2.0",
@@ -17,4 +17,4 @@ dependencies = [
     ]
 
 [project.scripts]
-predit  = "app.cli.main:main"
+predit  = "app.main:main"
