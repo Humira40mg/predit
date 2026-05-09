@@ -46,7 +46,7 @@ ACCEPT_LIST = ['', 'y', 'yes', 'o', 'oui']
 COMPATIBLE = ['mp4', 'mkv', 'mp3', 'wav']
 TEMP_AUDIO_PATH = f"{TMP}/audio.wav"
 
-if "STT" in config_data.keys():
+if "speech_to_text" in config_data.keys():
     STT_MODEL = config_data.get("STT").get("model") or "medium"
     STT_LANGUAGE = config_data.get("STT").get("language")
 else:

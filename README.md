@@ -13,7 +13,7 @@ predit currently uses **speech recognition** to detect silence, filler words, an
 
 Soon, a **local LLM via [Ollama](https://ollama.com/)** will take this further:
 - Deciding which **memes** to insert and when
-- Special support for **anime-style content with a mascot (images)**, choose the best image of your character for the scene.
+- Special support for **mascot (images)**, choose the best image of your character for the scene.
 
 The philosophy: pre-editing shouldn't be creative, it should be mechanical. predit handles the boring part so you can focus on the actual edit.
 
@@ -70,11 +70,16 @@ ollama:
   url: "http://127.0.0.1:11434"
   model: "gemma4:e2b"
   headers:
+  segmented_mode: False # Small context mode (better for weak hardware)
 project:
   fps: 60
   format: otio # the project file format, check which one is compatible with your editor.
  # All the preinstalled formats adapters are ['maya_sequencer', 'burnins', 'cmx_3600', 'svg', 'AAF', 'ale', 'xges', 'fcp_xml', 'otio_json', 'otioz', 'otiod'].
  # You can install new adapters with pip (you don't need to edit the code of predit)
+
+speech_to_text:
+  model: "medium"
+  language:  # en, fr... None == autodetect
 ```
 
 ---
@@ -82,10 +87,12 @@ project:
 ## Roadmap
 
 - [x] Derush via speech recognition (silence & filler removal)
-- [ ] Ollama integration — local LLM decision making
-- [ ] Emotion-aware character choosing
+- [x] Ollama integration — local LLM decision making
+- [x] Emotion-aware character choosing
 - [ ] Meme insertion
 - [ ] More output formats
+- [ ] Other LLM API compatibility
+- [ ] Frontend UI
 
 ---
 
