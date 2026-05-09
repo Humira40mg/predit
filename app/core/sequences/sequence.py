@@ -61,7 +61,7 @@ class Sequence:
         for file in listdir(self.media_folder):
             if Path(file).stem == media:
                 return file
-        print(f"\nCan't find '{media}', skipping that one.")
+        print(f"Can't find '{media}', skipping that one.")
         return False
 
     def add_gap(self, start, last_timestamp):

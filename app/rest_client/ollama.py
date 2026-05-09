@@ -18,7 +18,7 @@ def get_client(url = "http://127.0.0.1:11434", headers = {}):
 def generate(system, prompt, model):
     raw = get_client().generate(system=system, prompt=prompt, model=model, stream=False, format='json')
     response = raw["response"]
-    log(response)
+    log(f"[Prompt ]:\n  {prompt}\n\n[Response ]:\n  {response}")
     try:
         return json.loads(response).get("segments")
     except json.JSONDecodeError:

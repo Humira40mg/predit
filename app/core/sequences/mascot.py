@@ -10,9 +10,9 @@ from pathlib import Path
 
 MASCOT_SYSTEM = """
 You are a video content analysis assistant.
-You are given a list of sentences with their timestamps.
+You are given a list of sentences and the same texts with timestamps for the each word used.
 For each sentence, analyze the dominant emotion and return the most fitting character(s)/image(s).
-You can use multiple media for 1 sentence to dynamize the scene.
+Use multiple media, each for a 0.5 < time < 3s to dynamize the scene.
 
 You MUST always respond in valid JSON only, with no text before or after, using this structure:
 {
@@ -53,12 +53,12 @@ class Mascot(Sequence):
         total_sentences = len(self.speech)
         segments = []
         for i, s in enumerate(self.speech):
-            prompt = f"[{s.start:.2f}s → {s.end:.2f}s] {s.text}"
-            segments.extend(llm.generate(system=MASCOT_SYSTEM + "Available characters are: [{}]\nTry to not use the same character multiple times a row.".format(", ".join(self.mascot_list)),
+            prompt = f"[{s.start:.2f}s → {s.end:.2f}s] {s.text}\n\n" + "\n".join([f"{word.start:.2f}s → {word.end:.2f}s] {word.word}" for word in s.words])
+            segments.extend(llm.generate(system=MASCOT_SYSTEM + "Available characters are: [{}]\nNever use the same character multiple times a row.".format(", ".join(self.mascot_list)),
                 prompt = prompt,
                 model=LLM_MODEL
             ))
-            print(f"\nParsing LLM response... [{i+1}/{total_sentences}]")
+            print(f"Parsing LLM response... [{i+1}/{total_sentences}]")
         self.parse_llm_segments(segments)
         self.save_track_to_timeline()
             
@@ -67,12 +67,15 @@ class Mascot(Sequence):
         prompt = "\n".join([
             f"[{s.start:.2f}s → {s.end:.2f}s] {s.text}"
             for s in self.speech
-        ])
+        ]) + "\n\n"
 
-        segments = llm.generate(MASCOT_SYSTEM + "Available characters are: [{}]\nTry to not use the same character multiple times a row.".format(", ".join(self.mascot_list)),
+        for s in self.speech:
+            prompt = prompt + "\n".join([f"{word.start:.2f}s → {word.end:.2f}s] {word.word}" for word in s.words]) + "\n"
+
+        segments = llm.generate(MASCOT_SYSTEM + "Available characters are: [{}]\nNever use the same character multiple times a row.".format(", ".join(self.mascot_list)),
             prompt = prompt,
             model=LLM_MODEL
             )
-        print("\nLLM answered !\nParsing response...")
+        print("LLM answered !\nParsing response...")
         self.parse_llm_segments(segments)
         self.save_track_to_timeline()
