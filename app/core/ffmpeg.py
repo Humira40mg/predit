@@ -35,10 +35,10 @@ def normalize_video_s_audio(input_path: str) -> str:
     cmd.append(str(output_path))
 
     try:
-        print(f"Normalizing {input_path} to {output_path}...\n")
+        print(f"  Normalizing {input_path} to {output_path}...")
         run(cmd, check=True, capture_output=True)
         return str(output_path)
     except CalledProcessError as e:
-        print(f"Error during conversion : {e}\n")
+        print(f"Error during conversion : {e}")
         print(e.stderr.decode())  # print the actual error message from ffmpeg
         return input_path

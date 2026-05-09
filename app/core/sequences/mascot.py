@@ -10,9 +10,9 @@ from pathlib import Path
 
 MASCOT_SYSTEM = """
 You are a video content analysis assistant.
-You are given a list of sentences and the same texts with timestamps for the each word used.
+You are given a list of sentences.
 For each sentence, analyze the dominant emotion and return the most fitting character(s)/image(s).
-Use multiple media, each for a 0.5 < time < 3s to dynamize the scene.
+Use multiple media for 1 sentence, each for a 0.5 < time < 3s to dynamize the scene.
 
 You MUST always respond in valid JSON only, with no text before or after, using this structure:
 {
@@ -53,7 +53,7 @@ class Mascot(Sequence):
         total_sentences = len(self.speech)
         segments = []
         for i, s in enumerate(self.speech):
-            prompt = f"[{s.start:.2f}s → {s.end:.2f}s] {s.text}\n\n" + "\n".join([f"{word.start:.2f}s → {word.end:.2f}s] {word.word}" for word in s.words])
+            prompt = f"[{s.start:.2f}s → {s.end:.2f}s] {s.text}"
             segments.extend(llm.generate(system=MASCOT_SYSTEM + "Available characters are: [{}]\nNever use the same character multiple times a row.".format(", ".join(self.mascot_list)),
                 prompt = prompt,
                 model=LLM_MODEL
@@ -68,9 +68,6 @@ class Mascot(Sequence):
             f"[{s.start:.2f}s → {s.end:.2f}s] {s.text}"
             for s in self.speech
         ]) + "\n\n"
-
-        for s in self.speech:
-            prompt = prompt + "\n".join([f"{word.start:.2f}s → {word.end:.2f}s] {word.word}" for word in s.words]) + "\n"
 
         segments = llm.generate(MASCOT_SYSTEM + "Available characters are: [{}]\nNever use the same character multiple times a row.".format(", ".join(self.mascot_list)),
             prompt = prompt,

@@ -70,7 +70,7 @@ ollama:
   url: "http://127.0.0.1:11434"
   model: "gemma4:e2b"
   headers:
-  segmented_mode: False # Small context mode (better for weak hardware)
+  segmented_mode: false # Small context mode (better for weak hardware)
 project:
   fps: 60
   format: otio # the project file format, check which one is compatible with your editor.

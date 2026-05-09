@@ -27,10 +27,10 @@ class Sequence:
             print(f"No segments returned by the LLM, skipping {self.name} sequence...")
             return
 
+        track_name = self.name.lower()
         last_timestamp = 0
         for i, segment in enumerate(segments):
-            success, start, end, media = self.get_segment_data(segment, self.name.lower())
-
+            success, start, end, media = self.get_segment_data(segment, track_name)
             if not success: continue
             
             print(f"  Creating clip-{i}, using : {media}")
@@ -39,7 +39,8 @@ class Sequence:
             if not media :
                 continue
 
-            self.add_gap(start, last_timestamp)
+            if not self.add_gap(start, last_timestamp):
+                continue
             last_timestamp = end
 
             if is_image(media):
@@ -54,7 +55,7 @@ class Sequence:
         end = segment.get("end")
         media = segment.get(key)
 
-        if not start or not end or not media: return False, None, None, None
+        if start is None or end is None or media is None: return False, None, None, None
         return True, start, end, media
 
     def get_path_to_media_file(self, media:str) -> str:
@@ -65,9 +66,13 @@ class Sequence:
         return False
 
     def add_gap(self, start, last_timestamp):
-        gap_time = start - last_timestamp
+        gap_time = round(start - last_timestamp, 2)
         if gap_time > 0 :
             self.track.append(create_gap(gap_time))
+            return True
+        elif gap_time < 0:
+            return False
+        return True
     
     def add_image(self, i, media, duration):
         self.track.append(create_image_clip(f"image-{self.name}-{i}", 

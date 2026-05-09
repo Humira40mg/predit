@@ -48,12 +48,6 @@ def create_clip(
     source_start: str,   # timestamp 
     source_end: str,     # timestamp 
     ) -> otio.schema.Clip:
-    """
-    Crée un Clip qui extrait une portion d'une vidéo.
-
-    - available_range : toute la durée du fichier source
-    - source_range    : la portion qu'on veut utiliser (le "cut")
-    """
     return otio.schema.Clip(
         name=clip_name,
         media_reference=media_ref,
@@ -64,10 +58,6 @@ def create_image_clip(
     clip_name: str,
     media_ref,
     display_duration_seconds: float) -> otio.schema.Clip:
-    """
-    Crée un Clip d'image fixe.
-    L'image n'a pas de durée naturelle, on lui en donne une.
-    """
     return otio.schema.Clip(
         name=clip_name,
         media_reference=media_ref,

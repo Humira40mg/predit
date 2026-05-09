@@ -11,7 +11,7 @@ CONF_FOLDER = os.path.expanduser("~/.config/predit")
 CONFIG_PATH = (f"{CONF_FOLDER}/config.yml")
 
 if os.path.exists(CONFIG_PATH):
-    print(f"Config file found.\n")
+    print(f"Config file found.")
 else:
     create_config_file()
 
