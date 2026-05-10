@@ -84,7 +84,7 @@ class Sequence:
         full_duration = get_video_duration(filepath)
         self.track.append(create_clip(
                 clip_name=f"video-{self.name}-{i}",
-                media_ref=create_media_ref(filpath, full_duration),
+                media_ref=create_media_ref(filepath, full_duration),
                 source_start=0,
                 source_end=min(full_duration, duration)
                 )
