@@ -13,8 +13,8 @@ class DeRusher:
         # Initialize the path for the output audio.
         self.output_audio = output_audio
         self.timeline = proj.get_timeline()
-        self.vid_track = proj.create_Track("main_track_vid", TrackKind.Video)
-        self.aud_track = proj.create_Track("main_track_aud", TrackKind.Audio)
+        self.vid_track = proj.create_Track("MainVideo", TrackKind.Video)
+        self.aud_track = proj.create_Track("MainAudio", TrackKind.Audio)
 
 
     def extract_audio(self, clip: VideoClip) -> None:

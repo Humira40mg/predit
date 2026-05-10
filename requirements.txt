@@ -5,3 +5,4 @@ PyYAML~=6.0.3
 ollama>=0.6.1
 opentimelineio==0.18.1
 OpenTimelineIO-Plugins==0.18.1
+faster-whisper==1.2.1
