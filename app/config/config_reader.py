@@ -27,6 +27,8 @@ except Exception as e:
     print(f"An unexpected error occurred: {e}")
     sys.exit(1)
 
+FALLBACK_IMAGE = config_data.get("fallback_image")
+
 MASCOT_FOLDER = config_data.get("directories").get("mascot")
 MEME_FOLDER = config_data.get("directories").get("memes")
 
