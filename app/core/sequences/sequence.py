@@ -80,7 +80,7 @@ class Sequence:
                 duration))
     
     def add_video(self, i, media, duration):
-        filpath = f"{self.media_folder}/{media}"
+        filepath = f"{self.media_folder}/{media}"
         full_duration = get_video_duration(filepath)
         self.track.append(create_clip(
                 clip_name=f"video-{self.name}-{i}",
