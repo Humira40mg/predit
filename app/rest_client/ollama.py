@@ -26,3 +26,6 @@ def generate(system, prompt, model):
         import re
         match = re.search(r'\{.*\}', raw, re.DOTALL)
         return json.loads(match.group())["segments"]
+    except Exception as e:
+        log(f"Error while parsing the LLM's json:\n  {e}")
+        return []

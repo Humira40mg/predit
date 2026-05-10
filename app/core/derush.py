@@ -40,13 +40,13 @@ class DeRusher:
         for i, timestamp in enumerate(self.getTimeStamps()):
             clip_vid = proj.create_clip(
                 media_ref=media_ref,
-                clip_name=filepath,
+                clip_name=f"clip-video-{i}",
                 source_start=timestamp["start"],
                 source_end=timestamp["end"]
             )
             clip_aud = proj.create_clip(
                 media_ref=media_ref,
-                clip_name=f"clip-{filepath}-{i}",
+                clip_name=f"clip-audio-{i}",
                 source_start=timestamp["start"],
                 source_end=timestamp["end"]
             )

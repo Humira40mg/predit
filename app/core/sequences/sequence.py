@@ -13,6 +13,7 @@ class Sequence:
         self.name = name
         self.speech = speech
         self.track = create_Track(name, TrackKind.Video)
+        self.audio_track = create_Track(f"{name}Audio", TrackKind.Audio)
         self.media_folder = None
 
     def is_segmented_mode_activated(self):
@@ -69,6 +70,7 @@ class Sequence:
         gap_time = round(start - last_timestamp, 2)
         if gap_time > 0 :
             self.track.append(create_gap(gap_time))
+            self.audio_track.append(create_gap(gap_time))
             return True
         elif gap_time < 0:
             return False
@@ -78,18 +80,28 @@ class Sequence:
         self.track.append(create_image_clip(f"image-{self.name}-{i}", 
                 create_image_ref(f"{self.media_folder}/{media}", duration),
                 duration))
+        self.audio_track.append(create_gap(duration))
     
     def add_video(self, i, media, duration):
-        filpath = f"{self.media_folder}/{media}"
+        filepath = f"{self.media_folder}/{media}"
         full_duration = get_video_duration(filepath)
         self.track.append(create_clip(
                 clip_name=f"video-{self.name}-{i}",
-                media_ref=create_media_ref(filpath, full_duration),
+                media_ref=create_media_ref(filepath, full_duration),
+                source_start=0,
+                source_end=min(full_duration, duration)
+                )
+            )
+        self.audio_track.append(create_clip(
+                clip_name=f"audio-{self.name}-{i}",
+                media_ref=create_media_ref(filepath, full_duration),
                 source_start=0,
                 source_end=min(full_duration, duration)
                 )
             )
 
     def save_track_to_timeline(self):
-        print("\nSaving the character track to timeline...")
-        get_timeline().tracks.append(self.track)
+        print(f"\nSaving the {self.name} tracks to timeline...")
+        timeline = get_timeline()
+        timeline.tracks.append(self.track)
+        timeline.tracks.append(self.audio_track)

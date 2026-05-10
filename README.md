@@ -63,6 +63,7 @@ The output is an `.otio` file (and/or other formats) that you can import directl
 Located in `~/.config/predit/config.yaml` after predit first use.
 
 ```yaml
+fallback_image: "/home/user/Workspace/background.jpg"
 directories:
   mascot: 
   memes: "/home/user/Workspace/memes"
@@ -90,9 +91,10 @@ speech_to_text:
 - [x] Ollama integration — local LLM decision making
 - [x] Emotion-aware character choosing
 - [ ] Meme insertion
-- [ ] More output formats
+- [ ] Specific resources to use in the video
 - [ ] Other LLM API compatibility
 - [ ] Frontend UI
+- [ ] Docker
 
 ---
 
