@@ -16,16 +16,15 @@ def normalize_video_s_audio(input_path: str) -> str:
             cmd = [
                 "ffmpeg", "-y",
                 "-loop", "1", "-i", str(FALLBACK_IMAGE),
-                "-i", str(path),                        
-                "-r", str(FPS),
+                "-i", str(path),
+                "-vf", f"scale=trunc(iw/2)*2:trunc(ih/2)*2,fps={FPS}",
                 "-c:v", "libx264", "-tune", "stillimage", "-pix_fmt", "yuv420p",
                 "-c:a", "aac", "-b:a", "192k",
                 "-af", "loudnorm=I=-16:TP=-1.5:LRA=11",
-                "-shortest",                               
+                "-shortest",
                 str(output_path)
             ]
         else:
-            # fallback : blackscreen lavfi
             cmd = [
                 "ffmpeg", "-y",
                 "-f", "lavfi", "-i", f"color=c=black:s=1920x1080:r={FPS}",
@@ -40,8 +39,7 @@ def normalize_video_s_audio(input_path: str) -> str:
     elif path_suffix in [".mp4", ".mkv"]:
         cmd = [
             "ffmpeg", "-y", "-i", str(path),
-            "-r", str(FPS),
-            "-c:v", "copy",
+            "-c:v", "libx264", "-r", str(FPS), "-pix_fmt", "yuv420p",
             "-c:a", "aac", "-b:a", "192k",
             "-af", "loudnorm=I=-16:TP=-1.5:LRA=11",
             str(output_path)

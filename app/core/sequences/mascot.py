@@ -1,4 +1,5 @@
 import app.rest_client.ollama as llm
+from app.core.project_writter import get_timeline
 from app.config.config_reader import MASCOT_FOLDER, LLM_MODEL
 from app.utils.path_util import check_if_exist
 from app.utils.list_util import is_empty

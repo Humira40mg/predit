@@ -28,6 +28,8 @@ except Exception as e:
     sys.exit(1)
 
 FALLBACK_IMAGE = config_data.get("fallback_image")
+if FALLBACK_IMAGE:
+    FALLBACK_IMAGE = Path(FALLBACK_IMAGE)
 
 MASCOT_FOLDER = config_data.get("directories").get("mascot")
 MEME_FOLDER = config_data.get("directories").get("memes")
